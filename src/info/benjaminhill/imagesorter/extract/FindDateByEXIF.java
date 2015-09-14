@@ -17,7 +17,7 @@ import com.google.common.collect.ImmutableSet;
 
 import info.benjaminhill.imagesorter.FileMetadata;
 
-public class FindDateByMetadata implements DateFinder {
+public class FindDateByEXIF implements DateFinder {
 
   private static final Set<DateFormat> MATCHERS = ImmutableSet.of(new SimpleDateFormat("yyyy:MM:dd hh:mm:ss"),
       new SimpleDateFormat("EEE MMM dd hh:mm:ss z yyyy"), new SimpleDateFormat("dd.MM.yyyy hh:mm:ss"),

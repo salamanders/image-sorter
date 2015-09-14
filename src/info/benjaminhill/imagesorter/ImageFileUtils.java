@@ -61,7 +61,7 @@ public class ImageFileUtils {
           return FileVisitResult.CONTINUE;
         }
         // Success!
-        images.add(filePath);
+        images.add(root.relativize(filePath));
         return FileVisitResult.CONTINUE;
       }
     };

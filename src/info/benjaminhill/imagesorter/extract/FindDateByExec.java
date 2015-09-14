@@ -83,7 +83,7 @@ public class FindDateByExec implements DateFinder {
         final StringTokenizer st = new StringTokenizer(lines[lines.length - 1]);
         final String date = st.nextToken();// Get date
         System.out.println(date);
-        throw new java.lang.IllegalArgumentException();
+        throw new java.lang.IllegalArgumentException("Still working on Windows support, sorry!");
       }
       return result;
     } catch (final ParseException ex) {

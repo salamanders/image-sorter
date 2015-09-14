@@ -12,7 +12,7 @@ import com.google.common.collect.ImmutableSet;
 import info.benjaminhill.imagesorter.extract.DateFinder;
 import info.benjaminhill.imagesorter.extract.DateFinderException;
 import info.benjaminhill.imagesorter.extract.FindDateByExec;
-import info.benjaminhill.imagesorter.extract.FindDateByMetadata;
+import info.benjaminhill.imagesorter.extract.FindDateByEXIF;
 
 /**
  * Main sorter, gets the folder from the user via a popup, collects the files,
@@ -46,10 +46,10 @@ public class ImageSorter {
 
   void run() throws IOException {
     final Set<FileMetadata> images = ImageFileUtils.getImages(root).stream()
-        .map(imagePath -> new FileMetadata(imagePath)).collect(Collectors.toSet());
+        .map(imagePath -> new FileMetadata(root, imagePath)).collect(Collectors.toSet());
     LOG.info("Files Found:" + images.size());
 
-    final Set<DateFinder> finders = ImmutableSet.of(new FindDateByMetadata(), new FindDateByExec());
+    final Set<DateFinder> finders = ImmutableSet.of(new FindDateByEXIF(), new FindDateByExec());
 
     for (final FileMetadata image : images) {
       for (final DateFinder finder : finders) {
