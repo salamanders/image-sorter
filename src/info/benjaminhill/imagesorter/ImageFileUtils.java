@@ -15,30 +15,22 @@ import javax.swing.JFileChooser;
 import com.google.common.collect.ImmutableSet;
 
 /**
- * Handful of static file walkers, extension filters
- * 
- * @author benjaminhill@gmail.com
  *
+ * @author benjaminhill@gmail.com
  */
 public class ImageFileUtils {
 
-  public static Path getStartingPath() {
-    final JFileChooser jfc = new JFileChooser();
-    jfc.setDialogTitle("Choose your folder of images and movies to sort");
-    jfc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-    jfc.setApproveButtonText("Start in this Folder");
-    final int returnVal = jfc.showOpenDialog(null);
-    if (returnVal != JFileChooser.APPROVE_OPTION) {
-      throw new RuntimeException("No directory chosen.");
-    }
-    return Paths.get(jfc.getSelectedFile().toURI());
-  }
-
-  private static final ImmutableSet<String> MEDIA_EXTENSIONS = ImmutableSet.of("jpg", "jpeg", "mov", "mpg", "avi",
-      "3gp", "wmv", "mp4", "psd", "png", "cr2", "crw", "tif", "tiff", "m4v", "webm", "gif");
   private static final ImmutableSet<String> IGNORE_ENDINGS = ImmutableSet.of("txt", "log", "syncignore", "ini", "db",
       "dat", "ds_store", "lnk", "doc", "syncid");
+  private static final ImmutableSet<String> MEDIA_EXTENSIONS = ImmutableSet.of("jpg", "jpeg", "mov", "mpg", "avi",
+      "3gp", "wmv", "mp4", "psd", "png", "cr2", "crw", "tif", "tiff", "m4v", "webm", "gif");
 
+  /**
+   *
+   * @param root
+   * @return
+   * @throws IOException
+   */
   public static SortedSet<Path> getImages(final Path root) throws IOException {
     final SortedSet<Path> images = new ConcurrentSkipListSet<>();
     final SimpleFileVisitor<Path> myVisitor = new SimpleFileVisitor<Path>() {
@@ -67,6 +59,26 @@ public class ImageFileUtils {
     };
     Files.walkFileTree(root, myVisitor);
     return images;
+  }
+
+  /**
+   *
+   * @return
+   */
+  public static Path getStartingPath() {
+    final JFileChooser jfc = new JFileChooser();
+    jfc.setDialogTitle("Choose your folder of images and movies to sort");
+    jfc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+    jfc.setApproveButtonText("Start in this Folder");
+    final int returnVal = jfc.showOpenDialog(null);
+    if (returnVal != JFileChooser.APPROVE_OPTION) {
+      throw new RuntimeException("No directory chosen.");
+    }
+    return Paths.get(jfc.getSelectedFile().toURI());
+  }
+
+  private ImageFileUtils() {
+    // empty
   }
 
 }

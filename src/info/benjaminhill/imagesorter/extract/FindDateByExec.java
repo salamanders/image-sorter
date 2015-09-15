@@ -13,31 +13,19 @@ import java.util.logging.Logger;
 
 import info.benjaminhill.imagesorter.FileMetadata;
 
+/**
+ *
+ * @author benjaminhill@gmail.com
+ */
 public class FindDateByExec implements DateFinder {
 
-  @Override
-  public boolean appliesToFile(final FileMetadata fm) {
-    return true;
-  }
-
-  @Override
-  public void findDate(final FileMetadata fm) throws DateFinderException {
-    final Calendar cal = getCreationDate(fm.getStartLocation().toString());
-    // Success! Maybe.
-    try {
-      fm.setCalendar(cal.getTime());
-    } catch (final IllegalArgumentException iae) {
-      throw new DateFinderException(iae);
-    }
-  }
-
+  private static final Logger LOG = Logger.getLogger(FindDateByExec.class.getName());
   private static final ThreadLocal<SimpleDateFormat> TFORMATTER = new ThreadLocal<SimpleDateFormat>() {
     @Override
     protected SimpleDateFormat initialValue() {
       return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss +SSSS");
     }
   };
-  private static final Logger LOG = Logger.getLogger(FindDateByExec.class.getName());
 
   /**
    * Run command line (may be buggy)
@@ -100,4 +88,33 @@ public class FindDateByExec implements DateFinder {
     return System.getProperty("os.name").toLowerCase().contains("win");
   }
 
+  /**
+   *
+   * @param fm
+   * @return
+   */
+  @Override
+  public boolean appliesToFile(final FileMetadata fm) {
+    return true;
+  }
+
+  /**
+   *
+   * @param fm
+   * @return
+   * @throws DateFinderException
+   */
+  @Override
+  public Calendar findDate(final FileMetadata fm) throws DateFinderException {
+    return getCreationDate(fm.getStartLocation().toString());
+  }
+
+  /**
+   *
+   * @return
+   */
+  @Override
+  public double getConfidence() {
+    return 0.50;
+  }
 }

@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Set;
 
@@ -17,19 +18,35 @@ import com.google.common.collect.ImmutableSet;
 
 import info.benjaminhill.imagesorter.FileMetadata;
 
+/**
+ *
+ * @author benjaminhill@gmail.com
+ */
 public class FindDateByEXIF implements DateFinder {
 
   private static final Set<DateFormat> MATCHERS = ImmutableSet.of(new SimpleDateFormat("yyyy:MM:dd hh:mm:ss"),
       new SimpleDateFormat("EEE MMM dd hh:mm:ss z yyyy"), new SimpleDateFormat("dd.MM.yyyy hh:mm:ss"),
       new SimpleDateFormat("yyyy:MM:dd"));
 
+  /**
+   *
+   * @param fm
+   * @return
+   */
+  @Override
   public boolean appliesToFile(final FileMetadata fm) {
     final File file = fm.getStartLocation().toFile();
     return file.getName().toLowerCase().endsWith("jpg") || file.getName().toLowerCase().endsWith("jpeg");
   }
 
+  /**
+   *
+   * @param fm
+   * @return
+   * @throws DateFinderException
+   */
   @Override
-  public void findDate(final FileMetadata fm) throws DateFinderException {
+  public Calendar findDate(final FileMetadata fm) throws DateFinderException {
     final File file = fm.getStartLocation().toFile();
     Date result = null;
     try {
@@ -62,13 +79,18 @@ public class FindDateByEXIF implements DateFinder {
     if (result == null) {
       throw new DateFinderException(String.format("No metadata found within %s", fm.getStartLocation().toString()));
     }
+    final Calendar cal = Calendar.getInstance();
+    cal.setTime(result);
+    return cal;
+  }
 
-    // Success! Maybe.
-    try {
-      fm.setCalendar(result);
-    } catch (final IllegalArgumentException iae) {
-      throw new DateFinderException(iae);
-    }
+  /**
+   *
+   * @return
+   */
+  @Override
+  public double getConfidence() {
+    return 0.75;
   }
 
 }

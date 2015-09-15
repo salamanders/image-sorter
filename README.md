@@ -31,6 +31,22 @@ Error if reached 10_000 offset names
       }
     }
 
+  public static final Pattern YEAR_MONTH_MATCHER = Pattern.compile("^(\\d{4})\\D(\\d{2}).*$");
+  private static final Logger LOG = Logger.getLogger(ImageDateExtractor.class.getName());
+  private static Calendar getPathDate(final Path filePath) {
+    for (Path segment = filePath; segment != null && segment.getFileName() != null; segment = segment.getParent()) {
+      final Matcher m = YEAR_MONTH_MATCHER.matcher(segment.getFileName().toString());
+      if (m.matches()) {
+        final Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.YEAR, Integer.parseInt(m.group(1)));
+        cal.set(Calendar.MONTH, Integer.parseInt(m.group(2)) - 1);
+        if (isReasonableDate(cal)) {
+          return cal;
+        }
+      }
+    }
+    return null;
+  }
     newFolder = newFolder.replaceAll(" ", "");
 
     return Paths.get(newFolder);
